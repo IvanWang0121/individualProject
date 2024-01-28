@@ -14,7 +14,7 @@ def spectrogram_to_audio(spectrogram, sr=22050, n_fft=2048, hop_length=512, n_it
     return audio
 
 
-mfccs = np.load('D:\individualProject\soundfile\converted_female_mfcc.npy')
+mfccs = np.load('D:\individualProject\soundfile\mfcc\converted_female_mfcc_38365575.npy')
 
 n_mfcc = 13
 if mfccs.shape[0] == n_mfcc:
@@ -24,4 +24,4 @@ spectrogram = mfcc_to_spectrogram(mfccs)
 
 reconstructed_audio = spectrogram_to_audio(spectrogram)
 
-sf.write('reconstructed_audio.wav', reconstructed_audio, 22050)
+sf.write('maletofemale.wav', reconstructed_audio, 22050)
