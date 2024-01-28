@@ -5,7 +5,7 @@ import os
 
 audio, sr = librosa.load('D:\individualProject\soundfile\common_voice_en_38365575.mp3', sr=44100)
 # male_audio_folder = 'D:\individualProject\soundfile\common_voice_en_38365575.mp3'
-# output_folder = 'D:/individualProject/soundfile/common_voice_en_38365575.npy'
+# output_folder = 'D:/individualProject/soundfile/common_voice_en_3836555.npy'
 
 # if not os.path.exists(output_folder):
 #     os.makedirs(output_folder)
@@ -15,7 +15,7 @@ def extract_features(file_path):
     return np.mean(mfccs, axis=1)
 
 features = extract_features(audio)
-# np.save('common_voice_en_38365575.npy', features)
+# np.save('common_voice_en_3836575.npy', features)
 
 
 # for file_name in os.listdir(male_audio_folder):

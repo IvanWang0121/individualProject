@@ -102,7 +102,7 @@ generator.save('generator_model_mfcc.h5')
 
 
 
-# mfccs_new = np.load('D:\\individualProject\\soundfile\\common_voice_en_38365575.npy')
+# mfccs_new = np.load('D:\\individualProject\\soundfile\\common_voice_en_3836555.npy')
 # mfccs_new = np.expand_dims(mfccs_new, axis=0)
 #
 # female_condition = np.array([[1]])

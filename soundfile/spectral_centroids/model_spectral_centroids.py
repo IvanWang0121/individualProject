@@ -101,12 +101,3 @@ generator.save('generator_model_spectral_centroids.h5')
 
 
 
-# mfccs_new = np.load('D:\\individualProject\\soundfile\\common_voice_en_38365575.npy')
-# mfccs_new = np.expand_dims(mfccs_new, axis=0)
-#
-# female_condition = np.array([[1]])
-#
-# mfccs_new_reshaped = np.reshape(mfccs_new, (mfccs_new.shape[0], -1))
-# converted_female_mfcc = generator.predict([mfccs_new_reshaped, female_condition])
-#
-# np.save('converted_female_mfcc.npy', converted_female_mfcc)

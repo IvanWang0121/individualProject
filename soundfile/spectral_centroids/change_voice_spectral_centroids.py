@@ -3,7 +3,7 @@ import numpy as np
 
 generator = load_model('D:\individualProject\soundfile\spectral_centroids\generator_model_spectral_centroids.h5')
 
-spectral_centroids_new = np.load('')
+spectral_centroids_new = np.load('D:\individualProject\soundfile\spectral_centroids\common_voice_en_38365575_spectral.npy')
 
 female_condition = np.array([[1]])  # 女性标签
 
