@@ -1,52 +1,57 @@
-from tensorflow.keras.layers import Input, Dense, Dropout, LeakyReLU, BatchNormalization, Concatenate
+from tensorflow.keras.layers import Input, Dense, Reshape, Conv1D, BatchNormalization, Activation, Concatenate, \
+    LeakyReLU, Flatten, Dropout
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
+import tensorflow as tf
 import numpy as np
-from tensorflow.keras.layers import Reshape
+from tensorflow.keras.layers import Input, Conv1D, LeakyReLU, Dropout, Flatten, Dense, Embedding, Reshape, concatenate
+from tensorflow.keras.models import Model
 
-def build_generator(input_dim, condition_dim):
+def build_generator(input_dim, condition_dim, time_steps=12, features=326):
     input_noise = Input(shape=(input_dim,))
     condition = Input(shape=(condition_dim,))
 
     merged = Concatenate()([input_noise, condition])
+    x = Dense(128, activation='relu')(merged)
+    x = Dense(time_steps * features)(x)
+    x = Reshape((time_steps, features))(x)  # Adjust the reshape operation based on the dense layer output
 
-    x = Dense(128)(merged)
-    x = LeakyReLU(alpha=0.01)(x)
-    x = BatchNormalization(momentum=0.8)(x)
+    x = Conv1D(filters=64, kernel_size=3, padding='same')(x)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
 
-    x = Dense(256)(x)
-    x = LeakyReLU(alpha=0.01)(x)
-    x = BatchNormalization(momentum=0.8)(x)
-
-    x = Dense(input_dim, activation='tanh')(x)
+    x = Conv1D(filters=features, kernel_size=3, padding='same')(x)
+    x = Activation('tanh')(x)
 
     generator = Model(inputs=[input_noise, condition], outputs=x)
-
     return generator
 
 
-def build_discriminator(input_dim, condition_dim):
-    input_data = Input(shape=(input_dim,))
-    condition = Input(shape=(condition_dim,))
+def build_discriminator(time_steps=12, features=326, num_classes=2):
+    input_shape = (time_steps, features,)
+    input_data = Input(shape=input_shape, name='discriminator_input')
 
-    merged = Concatenate()([input_data, condition])
+    condition_input = Input(shape=(1,), name='condition_input')
 
-    x = Dense(128)(merged)
-    x = LeakyReLU(alpha=0.01)(x)
+    condition_embedding = Embedding(num_classes, features, input_length=1)(condition_input)
+    condition_embedding = Reshape((1, features))(condition_embedding)
+
+    condition_embedding = tf.keras.layers.RepeatVector(time_steps)(condition_embedding)
+
+    merged_input = concatenate([input_data, condition_embedding], axis=-1)
+
+    x = Conv1D(filters=64, kernel_size=3, strides=2, padding="same")(merged_input)
+    x = LeakyReLU(alpha=0.2)(x)
     x = Dropout(0.3)(x)
 
-    x = Dense(256)(x)
-    x = LeakyReLU(alpha=0.01)(x)
-    x = Dropout(0.3)(x)
-
+    x = Flatten()(x)
     validity = Dense(1, activation='sigmoid')(x)
 
-    discriminator = Model(inputs=[input_data, condition], outputs=validity)
-
+    discriminator = Model(inputs=[input_data, condition_input], outputs=validity, name='discriminator')
     return discriminator
 
 # 输入维度为1，因为每个频谱质心特征是一个标量值
-input_dim = 1
+input_dim = 100
 condition_dim = 1
 
 generator = build_generator(input_dim, condition_dim)

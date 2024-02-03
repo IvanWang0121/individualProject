@@ -1,46 +1,52 @@
-from tensorflow.keras.layers import Input, Dense, Reshape, Conv1D, BatchNormalization, Activation, Concatenate, \
-    LeakyReLU, Flatten, Dropout
+from tensorflow.keras.layers import Input, Dense, Dropout, LeakyReLU, BatchNormalization, Concatenate
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
-import tensorflow as tf
 import numpy as np
+from tensorflow.keras.layers import Reshape
 
-
-def build_generator(input_dim, condition_dim, time_steps=12, features=326):
+def build_generator(input_dim, condition_dim):
     input_noise = Input(shape=(input_dim,))
     condition = Input(shape=(condition_dim,))
 
     merged = Concatenate()([input_noise, condition])
-    x = Dense(128, activation='relu')(merged)
-    x = Reshape((time_steps, int(128 / time_steps)))(x)  # Adjust the reshape operation based on the dense layer output
 
-    x = Conv1D(filters=64, kernel_size=3, padding='same')(x)
-    x = BatchNormalization()(x)
-    x = Activation('relu')(x)
+    x = Dense(128)(merged)
+    x = LeakyReLU(alpha=0.01)(x)
+    x = BatchNormalization(momentum=0.8)(x)
 
-    x = Conv1D(filters=features, kernel_size=3, padding='same')(x)
-    x = Activation('tanh')(x)
+    x = Dense(256)(x)
+    x = LeakyReLU(alpha=0.01)(x)
+    x = BatchNormalization(momentum=0.8)(x)
+
+    x = Dense(input_dim, activation='tanh')(x)
 
     generator = Model(inputs=[input_noise, condition], outputs=x)
+
     return generator
 
 
-def build_discriminator(time_steps=12, features=326):
-    input_shape = (time_steps, features,)
-    input_data = Input(shape=input_shape)
+def build_discriminator(input_dim, condition_dim):
+    input_data = Input(shape=(input_dim,))
+    condition = Input(shape=(condition_dim,))
 
-    x = Conv1D(filters=64, kernel_size=3, strides=2, padding="same")(input_data)
-    x = LeakyReLU(alpha=0.2)(x)
+    merged = Concatenate()([input_data, condition])
+
+    x = Dense(128)(merged)
+    x = LeakyReLU(alpha=0.01)(x)
     x = Dropout(0.3)(x)
 
-    x = Flatten()(x)
+    x = Dense(256)(x)
+    x = LeakyReLU(alpha=0.01)(x)
+    x = Dropout(0.3)(x)
+
     validity = Dense(1, activation='sigmoid')(x)
 
-    discriminator = Model(inputs=input_data, outputs=validity)
+    discriminator = Model(inputs=[input_data, condition], outputs=validity)
+
     return discriminator
 
 # 输入维度为1，因为每个频谱质心特征是一个标量值
-input_dim = 100
+input_dim = 1
 condition_dim = 1
 
 generator = build_generator(input_dim, condition_dim)
