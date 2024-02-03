@@ -79,8 +79,8 @@ male_conditions = np.zeros((chroma_male_path.shape[0], 1))
 female_conditions = np.ones((chroma_female_path.shape[0], 1))
 
 epochs = 2500
-batch_size = 32
-half_batch = int(batch_size / 2)
+batch_size = 64
+half_batch = int(chroma_female_path.shape[0] / 2)
 
 for epoch in range(epochs):
     idx = np.random.randint(0, chroma_male_path.shape[0], half_batch)
