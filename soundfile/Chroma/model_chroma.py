@@ -65,10 +65,10 @@ validity = discriminator([generated_sample, condition])
 combined = Model([z, condition], validity)
 combined.compile(loss='binary_crossentropy', optimizer=Adam(0.0002, 0.5))
 
-# 加载频谱质心特征
+
 chroma_male_path = 'D:\individualProject\soundfile\Chroma_feature\combined_chroma_array_male.npy'
 chroma_male_path = np.load(chroma_male_path).reshape(-1, 1)
-chroma_female_path = 'D:\individualProject\soundfile\Chroma_feature\combined_chroma_array_female.npy'
+chroma_female_path = 'D:\\individualProject\\soundfile\\Chroma\\newcombined_chroma_array_female.npy'
 chroma_female_path = np.load(chroma_female_path).reshape(-1, 1)
 
 male_conditions = np.zeros((chroma_male_path.shape[0], 1))
