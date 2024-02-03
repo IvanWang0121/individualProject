@@ -27,16 +27,13 @@ def build_generator(input_dim, condition_dim, time_steps=12, features=326):
     return generator
 
 
-def build_discriminator(time_steps=12, features=326, num_classes=2):
-    input_shape = (time_steps, features,)
+def build_discriminator(input_shape, num_classes):
     input_data = Input(shape=input_shape, name='discriminator_input')
 
     condition_input = Input(shape=(1,), name='condition_input')
 
-    condition_embedding = Embedding(num_classes, features, input_length=1)(condition_input)
-    condition_embedding = Reshape((1, features))(condition_embedding)
-
-    condition_embedding = tf.keras.layers.RepeatVector(time_steps)(condition_embedding)
+    condition_embedding = Embedding(input_dim=num_classes, output_dim=input_shape[0] * input_shape[1])(condition_input)
+    condition_embedding = Reshape(target_shape=input_shape)(condition_embedding)
 
     merged_input = concatenate([input_data, condition_embedding], axis=-1)
 
@@ -47,15 +44,17 @@ def build_discriminator(time_steps=12, features=326, num_classes=2):
     x = Flatten()(x)
     validity = Dense(1, activation='sigmoid')(x)
 
-    discriminator = Model(inputs=[input_data, condition_input], outputs=validity, name='discriminator')
+    discriminator = Model(inputs=[input_data, condition_input], outputs=validity)
     return discriminator
 
-# 输入维度为1，因为每个频谱质心特征是一个标量值
+
 input_dim = 100
 condition_dim = 1
-
 generator = build_generator(input_dim, condition_dim)
-discriminator = build_discriminator(input_dim, condition_dim)
+
+input_shape = (12, 326)
+num_classes = 2
+discriminator = build_discriminator(input_shape=input_shape, num_classes=num_classes)
 
 discriminator.compile(loss='binary_crossentropy', optimizer=Adam(0.0002, 0.5), metrics=['accuracy'])
 
