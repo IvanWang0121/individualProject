@@ -15,9 +15,6 @@ def adjust_audio_pitch(audio_path, sr, target_pitch_mean):
 
     y, _ = librosa.load(audio_path, sr=sr)
     current_pitch_mean, _ = load_audio_and_calculate_pitch_mean(audio_path)
-    if current_pitch_mean == 0:  # 避免除以零
-        print("Error: Current pitch mean is zero.")
-        return None
 
 
     n_steps = 12 * np.log2(target_pitch_mean / current_pitch_mean)
