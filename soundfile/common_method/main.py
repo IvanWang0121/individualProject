@@ -1,5 +1,6 @@
 import librosa
 import numpy as np
+import os
 
 
 def load_audio_and_calculate_pitch_mean(audio_path):
@@ -23,8 +24,10 @@ def adjust_audio_pitch(audio_path, sr, target_pitch_mean):
 
 
 
-male_voice_path = 'male_voice.mp3'
-male_pitch_mean, sr = load_audio_and_calculate_pitch_mean(male_voice_path)
+male_folder_path = 'D:\individualProject\soundfile\male'
+pitch_means = []
+for filename in os.listdir(male_folder_path):
+    male_pitch_mean, sr = load_audio_and_calculate_pitch_mean(male_folder_path)
 
 
 female_voice_path = 'female_voice.mp3'

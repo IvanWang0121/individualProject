@@ -29,24 +29,24 @@ def build_generator(input_dim, condition_dim, time_steps=12, features=326):
 
 def build_discriminator(input_shape, num_classes):
     input_data = Input(shape=input_shape, name='discriminator_input')
-
     condition_input = Input(shape=(1,), name='condition_input')
 
-    condition_embedding = Embedding(input_dim=num_classes, output_dim=input_shape[0] * input_shape[1])(condition_input)
-    condition_embedding = Reshape(target_shape=input_shape)(condition_embedding)
+    condition_embedding = Embedding(input_dim=num_classes, output_dim=input_shape[1], input_length=1)(condition_input)
+    condition_embedding = Flatten()(condition_embedding)
+
+    condition_embedding = Reshape((1, input_shape[1]))(condition_embedding)
+    condition_embedding = tf.tile(condition_embedding, [1, input_shape[0], 1])
 
     merged_input = concatenate([input_data, condition_embedding], axis=-1)
 
     x = Conv1D(filters=64, kernel_size=3, strides=2, padding="same")(merged_input)
     x = LeakyReLU(alpha=0.2)(x)
     x = Dropout(0.3)(x)
-
     x = Flatten()(x)
     validity = Dense(1, activation='sigmoid')(x)
 
     discriminator = Model(inputs=[input_data, condition_input], outputs=validity)
     return discriminator
-
 
 input_dim = 100
 condition_dim = 1
@@ -83,9 +83,11 @@ batch_size = min(chroma_female_path.shape[0]*2, 64)
 half_batch = int(batch_size / 2)
 
 for epoch in range(epochs):
-    idx = np.random.randint(0, chroma_male_path.shape[0], half_batch)
-    male_samples = chroma_male_path[idx]
-    female_samples = chroma_female_path[idx]
+    idx_male = np.random.randint(0, chroma_male_path.shape[0], half_batch)
+    male_samples = chroma_male_path[idx_male]
+
+    idx_female = np.random.randint(0, chroma_female_path.shape[0], half_batch)
+    female_samples = chroma_female_path[idx_female]
 
     noise = np.random.normal(0, 1, (half_batch, input_dim))
     generated_samples = generator.predict([noise, np.ones((half_batch, 1))])
