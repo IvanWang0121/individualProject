@@ -37,7 +37,10 @@ maletarget_pitch_mean = np.mean(means)
 
 
 female_voice_path = 'D:\\individualProject\\soundfile\\female\\common_voice_en_38024629.mp3'
+#改为变量，接受数据
+
 y_female_adjusted = adjust_audio_pitch(female_voice_path, sr, maletarget_pitch_mean)
 
 output_path = 'adjusted_female_voice.wav'
+#改为桌面的位置（用户选择）
 sf.write(output_path, y_female_adjusted, sr)
