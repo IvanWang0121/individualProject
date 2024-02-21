@@ -28,11 +28,11 @@ def plot_frequency_spectrum(y, sr, title):
     magnitude = np.abs(fft)
     frequency = np.linspace(0, sr, len(magnitude))
 
-    # draw half 只绘制前半部分频谱（对称的）
+    # draw half
     left_spectrum = magnitude[:int(len(magnitude)/2)]
     left_frequency = frequency[:int(len(frequency)/2)]
 
-    #  draw 绘制频谱图
+    #  draw
     plt.plot(left_frequency, left_spectrum)
     plt.title(title)
     plt.xlabel('Frequency (Hz)')

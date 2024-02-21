@@ -1,18 +1,19 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QAbstractButton, QPushButton, QFileDialog, \
-    QVBoxLayout
+    QVBoxLayout, QMessageBox
 from PyQt6.QtGui import QIcon, QFont
 from PyQt6.QtWidgets import QMainWindow, QLabel
-# from Mainwindow import MainWindow
-# from pitchshifting import PitchShiftingWindow
+
 
 import sys
+import globals
+from design.inputdata_common import PitchShiftingWindow
+
 
 class SelectFileWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        #self.select2 = MainWindow()
-        # self.select3 = PitchShiftingWindow()
+        self.select2 = PitchShiftingWindow()
 
         # 窗口大小
         self.setGeometry(200, 200, 1280, 960)
@@ -49,17 +50,27 @@ class SelectFileWindow(QWidget):
     def open_file_dialog(self):
         file_dialog = QFileDialog(self)
         file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-        file_dialog.setNameFilter("WAV Files (*.wav)")
+        file_dialog.setNameFilter("Audio Files (*.wav *.mp3)")
 
         if file_dialog.exec():
+            globals.selected_files = file_dialog.selectedFiles()
+
             selected_files = file_dialog.selectedFiles()
             for file_name in selected_files:
                 print(f"Selected file: {file_name}")
                 self.file_label.setText(f"Selected File: {file_name}")
 
     def window_after_selection(self):
-        if self.file_label.text():
-            self.close()
+        if globals.selected_files:
+            self.hide()
+            self.select2.show()
+        else:
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Icon.Warning)
+            msgBox.setText("No file selected")
+            msgBox.setInformativeText("Please select a file before confirming.")
+            msgBox.setWindowTitle("Warning")
+            msgBox.exec()
 
 
 if __name__ == "__main__":
