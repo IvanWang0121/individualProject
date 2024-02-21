@@ -18,15 +18,17 @@ class SelectFileWindow(QWidget):
         # 窗口大小
         self.setGeometry(200, 200, 1280, 960)
         self.setFixedWidth(700)
-        self.setFixedHeight(400)
-        self.setStyleSheet('background-color:pink')
+        self.setFixedHeight(300)
+        self.setStyleSheet('background-color:#E6E6FA')
+        self.setWindowTitle("Audio Processing Tools")
 
         layout = QVBoxLayout()
 
-        label = QLabel("Select a file:", self)
+        label = QLabel("Choose your ideal file\n   ('.mp3'&'.wav'):", self)
         layout.addWidget(label)
 
         select_file_button = QPushButton("select a file", self)
+        select_file_button.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色=
         select_file_button.clicked.connect(self.open_file_dialog)
         layout.addWidget(select_file_button)
 
@@ -36,16 +38,11 @@ class SelectFileWindow(QWidget):
         self.setLayout(layout)
 
         comfirmbutton = QPushButton("Comfirm",self)
-        comfirmbutton.setGeometry(450, 260, 200, 60)  # 调整按钮位置和大小
+        comfirmbutton.setGeometry(450, 190, 200, 60)  # 调整按钮位置和大小
         comfirmbutton.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
-        comfirmbutton.setStyleSheet("background-color: white; color: black;")  # 按钮的背景，文本颜色=
+        comfirmbutton.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色=
         comfirmbutton.clicked.connect(self.window_after_selection)
 
-        # comfirmbutton = QPushButton("Back",self)
-        # comfirmbutton.setGeometry(5, 6, 60, 20)  # 调整按钮位置和大小
-        # comfirmbutton.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
-        # comfirmbutton.setStyleSheet("background-color: white; color: black;")  # 按钮的背景，文本颜色=
-        # comfirmbutton.clicked.connect(self.back_last_window())
 
     def open_file_dialog(self):
         file_dialog = QFileDialog(self)
@@ -71,6 +68,7 @@ class SelectFileWindow(QWidget):
             msgBox.setInformativeText("Please select a file before confirming.")
             msgBox.setWindowTitle("Warning")
             msgBox.exec()
+
 
 
 if __name__ == "__main__":
