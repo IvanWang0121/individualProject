@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QAbstractButton, QPushButton, QFileDialog, \
-    QStackedWidget
+    QStackedWidget, QMessageBox
 from PyQt6.QtGui import QIcon, QFont
 from selectFile import SelectFileWindow
 
@@ -41,32 +41,32 @@ class MainWindow(QMainWindow):
     # 创建按钮属性
     def create_button(self):
         # 功能1
-        btn1 = QPushButton("Format Conversion", self)  # 按钮文案
+        btn1 = QPushButton("Conmmon Method", self)  # 按钮文案
         btn1.setGeometry(30, 50, 300, 60)  # 调整按钮位置和大小
         btn1.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
         btn1.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色=
         btn1.clicked.connect(self.open_select_window)  # 跳转
 
         # 功能2
-        btn2 = QPushButton("Audio Speed", self)  # 按钮文案
+        btn2 = QPushButton("Voice Recognition", self)  # 按钮文案
         btn2.setGeometry(30, 130, 300, 60)  # 调整按钮位置和大小
         btn2.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
         btn2.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色=
         btn2.clicked.connect(self.open_select_window)  # 跳转
 
         # 功能3
-        btn3 = QPushButton("Audio Clip", self)  # 按钮文案
+        btn3 = QPushButton("MFCCS", self)  # 按钮文案
         btn3.setGeometry(350, 50, 300, 60)  # 调整按钮位置和大小
         btn3.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
         btn3.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色=
         btn3.clicked.connect(self.open_select_window)
 
         # 功能4
-        btn4 = QPushButton("Pitch Change", self)  # 按钮文案
+        btn4 = QPushButton("Quit", self)  # 按钮文案
         btn4.setGeometry(350, 130, 300, 60)  # 调整按钮位置和大小
         btn4.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
         btn4.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色
-        btn4.clicked.connect(self.open_select_window)
+        btn4.clicked.connect(self.close)
 
     def open_select_window(self):
         self.hide()

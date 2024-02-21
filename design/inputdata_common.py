@@ -29,7 +29,7 @@ class PitchShiftingWindow(QWidget):
         confirm_button.setGeometry(450, 190, 200, 60)  # 调整按钮位置和大小
         confirm_button.setFont(QFont("Times", 12, QFont.Weight.ExtraBold))  # 按钮字体文案
         confirm_button.setStyleSheet("background-color: light grey; color: black;")  # 按钮的背景，文本颜色=
-        confirm_button.clicked.connect(self.on_confirm)
+        confirm_button.clicked.connect(self.inputdata)
         confirm_button.clicked.connect(self.window_after_choosevalue)
 
 
@@ -38,7 +38,7 @@ class PitchShiftingWindow(QWidget):
         self.input1.resize(200, 30)  # 设置输入框的宽度和高度
         self.input1.setStyleSheet("background-color: #FFFFF0; color: black;")  # 按钮的背景，文本颜色=
 
-    def on_confirm(self):
+    def inputdata(self):
 
         value1 = self.input1.text()
 
@@ -47,7 +47,7 @@ class PitchShiftingWindow(QWidget):
     def window_after_choosevalue(self):
         if globals.n_steps_value_common:
             self.hide()
-            self.select2.show()
+            self.select.show()
         else:
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Icon.Warning)
